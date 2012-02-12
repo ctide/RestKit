@@ -163,6 +163,8 @@ NSString *RKPathAppendQueryParams(NSString *resourcePath, NSDictionary *queryPar
     NSString *_OAuth1AccessTokenSecret;
     NSString *_OAuth2AccessToken;
     NSString *_OAuth2RefreshToken;
+    NSString *_authToken;
+    NSString *_authTokenKey;
 	NSMutableDictionary *_HTTPHeaders;
 	RKReachabilityObserver *_reachabilityObserver;
 	NSString *_serviceUnavailableAlertTitle;
@@ -299,6 +301,9 @@ NSString *RKPathAppendQueryParams(NSString *resourcePath, NSDictionary *queryPar
  @see RKRequestAuthenticationType
  */
 @property(nonatomic, retain) NSString *password;
+
+@property(nonatomic, retain) NSString *authToken;
+@property(nonatomic, retain) NSString *authTokenKey;
 
 /*** @name OAuth Secrets */
 
@@ -480,6 +485,17 @@ NSString *RKPathAppendQueryParams(NSString *resourcePath, NSDictionary *queryPar
  @return A configured RKClient instance ready to send requests
  */
 + (RKClient *)clientWithBaseURL:(NSString *)baseURL username:(NSString *)username password:(NSString *)password;
+
+/**
+ Return a Rest client scoped to a particular base URL with an associated authentication token.
+ If the [singleton client]([RKClient sharedClient]) is nil, the client instantiated will become the singleton instance
+ 
+ @param baseURL The baseURL to set for the client. All requests will be relative to this base URL
+ @param authToken The authentication token that will be used for all requests
+ @param authTokenKey The query parameter key to be used for the associated authentication token
+ @return A configured RKClient instance ready to send requests
+ */
++ (RKClient *)clientWithBaseURL:(NSString *)baseURL authToken:(NSString *)authToken authTokenKey:(NSString *)authTokenKey;
 
 /**
  Return a client scoped to a particular base URL. If the singleton client is nil, the return client is set as the singleton

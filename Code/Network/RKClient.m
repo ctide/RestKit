@@ -80,6 +80,8 @@ NSString *RKPathAppendQueryParams(NSString *resourcePath, NSDictionary *queryPar
 @synthesize OAuth1AccessTokenSecret = _OAuth1AccessTokenSecret;
 @synthesize OAuth2AccessToken = _OAuth2AccessToken;
 @synthesize OAuth2RefreshToken = _OAuth2RefreshToken;
+@synthesize authToken = _authToken;
+@synthesize authTokenKey = _authTokenKey;
 @synthesize HTTPHeaders = _HTTPHeaders;
 @synthesize additionalRootCertificates = _additionalRootCertificates;
 @synthesize disableCertificateValidation = _disableCertificateValidation;
@@ -112,6 +114,14 @@ NSString *RKPathAppendQueryParams(NSString *resourcePath, NSDictionary *queryPar
 	client.username = username;
 	client.password = password;
 	return client;
+}
+
++ (RKClient *)clientWithBaseURL:(NSString *)baseURL authToken:(NSString *)authToken authTokenKey:(NSString *)authTokenKey {
+	RKClient *client = [RKClient clientWithBaseURL:baseURL];
+    client.authenticationType = RKRequestAuthenticationTypeAuthToken;
+	client.authToken = authToken;
+	client.authTokenKey = authTokenKey;
+	return client;    
 }
 
 - (id)init {
@@ -238,6 +248,10 @@ NSString *RKPathAppendQueryParams(NSString *resourcePath, NSDictionary *queryPar
     // OAuth2 Parameters
     request.OAuth2AccessToken = self.OAuth2AccessToken;
     request.OAuth2RefreshToken = self.OAuth2RefreshToken;
+    
+    // auth token parameters
+    request.authToken = self.authToken;
+    request.authTokenKey = self.authTokenKey;
 }
 
 - (void)setValue:(NSString *)value forHTTPHeaderField:(NSString *)header {
@@ -344,7 +358,13 @@ NSString *RKPathAppendQueryParams(NSString *resourcePath, NSDictionary *queryPar
 
 - (RKRequest *)load:(NSString *)resourcePath method:(RKRequestMethod)method params:(NSObject<RKRequestSerializable> *)params delegate:(id)delegate {
 	NSURL* resourcePathURL = nil;
-	if (method == RKRequestMethodGET) {
+    if (self.authenticationType == RKRequestAuthenticationTypeAuthToken && _authToken && _authTokenKey) {
+        if (params == nil) {
+            params = [[NSMutableDictionary alloc] init];
+        }
+        [params setValue:_authToken forKey:_authTokenKey];
+    }
+    if (method == RKRequestMethodGET) {
 		resourcePathURL = [self URLForResourcePath:resourcePath queryParams:(NSDictionary*)params];
 	} else {
 		resourcePathURL = [self URLForResourcePath:resourcePath];

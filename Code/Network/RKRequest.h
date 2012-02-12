@@ -86,7 +86,8 @@ typedef enum {
     RKRequestAuthenticationTypeHTTP,         // Use NSURLConnection's HTTP AUTH auto-negotiation
     RKRequestAuthenticationTypeHTTPBasic,    // Force the use of HTTP Basic authentication. This will supress AUTH challenges
     RKRequestAuthenticationTypeOAuth1,       // Enable the use of OAuth 1.0 authentication
-    RKRequestAuthenticationTypeOAuth2        // Enable the use of OAuth 2.0 authentication
+    RKRequestAuthenticationTypeOAuth2,       // Enable the use of OAuth 2.0 authentication
+    RKRequestAuthenticationTypeAuthToken     // Enable the use of an auth token to be passed with each request as a query parameter
 } RKRequestAuthenticationType;
 
 @class RKResponse, RKRequestQueue, RKReachabilityObserver;
@@ -112,6 +113,8 @@ typedef enum {
     NSString *_OAuth1AccessTokenSecret;
     NSString *_OAuth2AccessToken;
     NSString *_OAuth2RefreshToken;
+    NSString *_authToken;
+    NSString *_authTokenKey;
 	RKRequestMethod _method;
 	BOOL _isLoading;
 	BOOL _isLoaded;
@@ -270,6 +273,9 @@ typedef enum {
  The OAuth 2.0 refresh token. Used to retrieve a new access token before expiration
  */
 @property(nonatomic,retain) NSString *OAuth2RefreshToken;
+
+@property(nonatomic, retain) NSString *authToken;
+@property(nonatomic, retain) NSString *authTokenKey;
 
 /////////////////////////////////////////////////////////////////////////
 /// @name Cacheing

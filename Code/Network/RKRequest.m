@@ -60,6 +60,8 @@
 @synthesize OAuth1AccessTokenSecret = _OAuth1AccessTokenSecret;
 @synthesize OAuth2AccessToken = _OAuth2AccessToken;
 @synthesize OAuth2RefreshToken = _OAuth2RefreshToken;
+@synthesize authToken = _authToken;
+@synthesize authTokenKey = _authTokenKey;
 @synthesize queue = _queue;
 @synthesize timeoutInterval = _timeoutInterval;
 @synthesize reachabilityObserver = _reachabilityObserver;
@@ -173,6 +175,10 @@
     _OAuth2AccessToken = nil;
     [_OAuth2RefreshToken release];
     _OAuth2RefreshToken = nil;
+    [_authToken release];
+    _authToken = nil;
+    [_authTokenKey release];
+    _authTokenKey = nil;
     [self invalidateTimeoutTimer];
     [_timeoutTimer release];
     _timeoutTimer = nil;
@@ -249,7 +255,7 @@
           CFRelease(dummyRequest);
         }
     }
-    
+
     // Add OAuth headers if is need it
     // OAuth 1
     if(self.authenticationType == RKRequestAuthenticationTypeOAuth1){        
