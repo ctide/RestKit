@@ -52,6 +52,9 @@
 }
 
 - (id)initWithResourcePath:(NSString*)resourcePath objectManager:(RKObjectManager*)objectManager delegate:(id<RKObjectLoaderDelegate>)delegate {
+    if (objectManager.client.authenticationType == RKRequestAuthenticationTypeAuthToken) {
+        resourcePath = [[NSString alloc] initWithFormat: @"%@?%@=%@", resourcePath, objectManager.client.authTokenKey, objectManager.client.authToken];
+    }
 	if ((self = [super initWithURL:[objectManager.client URLForResourcePath:resourcePath] delegate:delegate])) {		
         _objectManager = objectManager;
         [self.objectManager.client setupRequest:self];
